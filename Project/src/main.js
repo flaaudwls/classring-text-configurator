@@ -118,7 +118,6 @@ function reverseString(str) {
 
 //CHANGE LETTERS OF EACH AREA
 export function changeText(text, side) {
-    // text = 'ASCCCS_S'
     let L = text.length;
     var temp, index;
     switch (side) {

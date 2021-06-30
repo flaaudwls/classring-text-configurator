@@ -86,7 +86,7 @@ export function UIControls(ring, graphs, charPos, camera, controls) {
         str = str.toUpperCase();
         str = str.replace(/[`{}_\[\]\\|^]/g, '');
         this.value = str;
-        changeText(str + '_' + document.getElementById('top_text1').value, 'top');
+        changeText(str + '_' + document.getElementById('top_text2').value, 'top');
     }
 
     //CHANGE TOP TEXT 2
