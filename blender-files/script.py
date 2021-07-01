@@ -4,9 +4,9 @@ objects = bpy.context.selected_objects
 result = {} 
 for item in bpy.context.selected_objects:
     result[item.name]  ={
-        "position": [ item.location.x,  item.location.z, -item.location.y],
-        "scale": [ -item.scale.x, item.scale.z, item.scale.y ],
-        "rotation": [ item.rotation_euler.x, item.rotation_euler.z, item.rotation_euler.y ]
+        "position": [ round(item.location.x,2),  round(item.location.z,2), -round(item.location.y,2)],
+        "scale": [ round(item.scale.x,2), round(item.scale.z,2), round(item.scale.y,2) ],
+        "rotation": [ round(item.rotation_euler.x,2), round(item.rotation_euler.z,2), round(item.rotation_euler.y,2) ]
     }
     
 with open('D:\data.txt', "w") as f:

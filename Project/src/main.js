@@ -44,13 +44,12 @@ function init() {
         load_icon.style.display = 'none';
 
         UIControls(ring, graphs, charPos, camera, controls);
-        changeText('ABCD_ECD', 'top');
-        // changeText('NEWBURYPARK HIGHSCHOOL', 'neck');
-        // changeText('JEREMY', 'right');
-        // changeText('2021', 'left');
-        // changeText('CAD', 'inside');
-        // changeGraph('soccer_ball', 'left');
-        // changeGraph('graduate', 'right')
+        changeText('MIAMI_HIGHSCHOOL', 'top');
+        changeText('FAMILY', 'right');
+        changeText('2021', 'left');
+        changeText('NEW BEGINNINGS', 'inside');
+        changeGraph('soccer_ball', 'left');
+        changeGraph('graduate', 'right')
         controls.autoRotate = false;
     });
 
@@ -83,7 +82,8 @@ export function changeGraph(graphName, side) {
     ring[side] = graphs[graphName].clone();
     var a = data[side + '_graph'];
     ring[side].position.set(a.position[0], a.position[1], a.position[2]);
-    rotate(ring[side], a.rotation);
+    const rot = a.rotation; console.log(rot)
+    ring[side].rotation.set(rot[0], rot[1], -rot[2])
     ring[side].scale.set(a.scale[0], a.scale[1], a.scale[2]);
 
 
@@ -135,43 +135,25 @@ export function changeText(text, side) {
             orderedString += text1;
             orderedString += '*';
             orderedString += reverseString(text2.substr(Math.ceil(L2 / 2)));
+
+            var top1TextDetector = 0;
             for (var i = 0; i < L + 2; ++i) {
+                if (orderedString.charAt(i) === '*') top1TextDetector++;
+
                 temp = (orderedString.charAt(i) !== '*') ?
                     getMesh(orderedString.charCodeAt(i), 'arial', 'regular') :
                     chars.star;
                 let m = temp.clone();
                 var a = data[`top_${L + 2}_${L2 % 2}_${i + 1}`];
+                if (a === undefined) console.log(`top_${L + 2}_${L2 % 2}_${i + 1}`, L1, L2)
                 m.position.set(a.position[0], a.position[1], a.position[2]);
                 rotate(m, a.rotation);
-                m.scale.set(-a.scale[0], a.scale[1], -a.scale[2]);
+
+                m.scale.set(-a.scale[0], a.scale[1], (top1TextDetector == 1) ? a.scale[2] : -a.scale[2]);
                 m.visible = true;
                 m.material = ring.body[0].material;
                 charPos.top.push(m);
                 scene.add(m);
-            }
-            break;
-        case 'neck':
-            removeChars('neck');
-            for (var i = 0; i < L; ++i) {
-                temp = getMesh(text.charCodeAt(i), 'cambria', 'bold');
-                let m = temp.clone();
-                let a;
-                if (L < 14 || L == 22 || L == 21) {
-                    index = neckCharPos[L.toString()][i] - 1;
-                    a = data['neck_arr_' + (index + 1)];
-                } else {
-                    a = data1['neck_' + L + '_' + (i + 1)];
-                }
-
-                m.position.set(a.position[0], a.position[1], a.position[2]);
-                rotate(m, a.rotation);
-                m.scale.set(a.scale[0] - 0.3, 0.8, a.scale[2] + 0.2);
-                m.visible = true;
-                m.material = ring.body[0].material;
-                charPos.neck.push(m);
-                scene.add(m);
-                if (L == 22 && i == 0) m.position.x -= 0.7//window['first'] = m;
-                if (L == 22 && i == 21) m.position.x += 0.7//window['last'] = m;
             }
             break;
         case 'right':

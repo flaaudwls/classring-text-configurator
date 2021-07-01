@@ -78,28 +78,45 @@ export function UIControls(ring, graphs, charPos, camera, controls) {
 
     // CHANGE TOP TEXT 1
     document.getElementById('top_text1').onfocus = function () {
-        moveCamera(camera, controls, CAMERA_POS.topText);
+        // moveCamera(camera, controls, CAMERA_POS.topText);
     }
     document.getElementById('top_text1').onkeyup = function () {
-        moveCamera(camera, controls, CAMERA_POS.topText);
-        var str = this.value.replace(/[^ -~]+/g, "");
-        str = str.toUpperCase();
-        str = str.replace(/[`{}_\[\]\\|^]/g, '');
-        this.value = str;
-        changeText(str + '_' + document.getElementById('top_text2').value, 'top');
+        // moveCamera(camera, controls, CAMERA_POS.topText);
+        if (checkLength()) {
+            var str = this.value.replace(/[^ -~]+/g, "");
+            str = str.toUpperCase();
+            str = str.replace(/[`{}_\[\]\\|^]/g, '');
+            this.value = str;
+            changeText(str + '_' + document.getElementById('top_text2').value, 'top');
+        } else {
+            var str = this.value;
+            this.value = str.substr(0, str.length - 1)
+        }
     }
 
     //CHANGE TOP TEXT 2
     document.getElementById('top_text2').onfocus = function () {
-        moveCamera(camera, controls, CAMERA_POS.topText);
+        // moveCamera(camera, controls, CAMERA_POS.topText);
     }
     document.getElementById('top_text2').onkeyup = function () {
-        moveCamera(camera, controls, CAMERA_POS.topText);
-        var str = this.value.replace(/[^ -~]+/g, "");
-        str = str.toUpperCase();
-        str = str.replace(/[`{}_\[\]\\|^]/g, '');
-        this.value = str;
-        changeText(document.getElementById('top_text1').value + '_' + str, 'top');
+        // moveCamera(camera, controls, CAMERA_POS.topText);
+        if (checkLength()) {
+            var str = this.value.replace(/[^ -~]+/g, "");
+            str = str.toUpperCase();
+            str = str.replace(/[`{}_\[\]\\|^]/g, '');
+            this.value = str;
+            changeText(document.getElementById('top_text1').value + '_' + str, 'top');
+        } else {
+            var str = this.value;
+            this.value = str.substr(0, str.length - 1)
+        }
+    }
+
+    function checkLength() {
+        var str1 = document.getElementById('top_text1').value;
+        var str2 = document.getElementById('top_text2').value;
+        if (str1.length + str2.length > 22) return false
+        else return true;
     }
 
 
@@ -111,7 +128,6 @@ export function UIControls(ring, graphs, charPos, camera, controls) {
         ring.body[0].material.map = ring.textures[ring.color];
         charPos.right[0].material.map = ring.textures[ring.color];
         charPos.left[0].material.map = ring.textures[ring.color];
-        charPos.neck[0].material.map = ring.textures[ring.color];
         graphs['soccer_ball'].material.map = ring.textures[ring.color];
         // graphs[0].material.needsUpdate = false;
     }
