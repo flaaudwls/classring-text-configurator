@@ -3,7 +3,8 @@ import { moveCamera } from "./utils.js";
 import { CAMERA_POS } from "./Constant.js";
 import { changeText, changeGraph } from '../main.js';
 
-export function UIControls(ring, graphs, charPos, camera, controls) {
+
+export function UIControls(ring, graphs, charPos, scene, camera, controls) {
 
     //CHANGE COLOR OF CORE JEWELRY
     document.getElementById('colorSelect').onclick = function () {
@@ -78,10 +79,10 @@ export function UIControls(ring, graphs, charPos, camera, controls) {
 
     // CHANGE TOP TEXT 1
     document.getElementById('top_text1').onfocus = function () {
-        // moveCamera(camera, controls, CAMERA_POS.topText);
+        moveCamera(camera, controls, CAMERA_POS.topText1);
     }
     document.getElementById('top_text1').onkeyup = function () {
-        // moveCamera(camera, controls, CAMERA_POS.topText);
+        moveCamera(camera, controls, CAMERA_POS.topText1);
         if (checkLength()) {
             var str = this.value.replace(/[^ -~]+/g, "");
             str = str.toUpperCase();
@@ -96,10 +97,10 @@ export function UIControls(ring, graphs, charPos, camera, controls) {
 
     //CHANGE TOP TEXT 2
     document.getElementById('top_text2').onfocus = function () {
-        // moveCamera(camera, controls, CAMERA_POS.topText);
+        moveCamera(camera, controls, CAMERA_POS.topText2);
     }
     document.getElementById('top_text2').onkeyup = function () {
-        // moveCamera(camera, controls, CAMERA_POS.topText);
+        moveCamera(camera, controls, CAMERA_POS.topText2);
         if (checkLength()) {
             var str = this.value.replace(/[^ -~]+/g, "");
             str = str.toUpperCase();
@@ -122,15 +123,7 @@ export function UIControls(ring, graphs, charPos, camera, controls) {
 
 
 
-    // CHANGE RING COLOR
-    document.getElementById('ring_color').onchange = function () {
-        ring.color = this.value;
-        ring.body[0].material.map = ring.textures[ring.color];
-        charPos.right[0].material.map = ring.textures[ring.color];
-        charPos.left[0].material.map = ring.textures[ring.color];
-        graphs['soccer_ball'].material.map = ring.textures[ring.color];
-        // graphs[0].material.needsUpdate = false;
-    }
+
 
 
 }

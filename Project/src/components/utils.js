@@ -7,11 +7,14 @@ export function loadAssets(scene, renderer, callback) {
     var ring = {
         body: [],
         color: 'gold',
-        textures: { 'gold': null, 'rose': null, 'silver': null },
+        textures: { 'gold': null, 'rose': null, 'silver': null, 'cad': null },
         core: [], //CORE JEWELRY
         left: null, //LEFT GRAPH
         right: null,
-        line: null
+        line: null,
+        black: null,
+        blackMat: null,
+        graphMat: null
     };
 
     var chars = {
@@ -25,11 +28,16 @@ export function loadAssets(scene, renderer, callback) {
 
     var graphs = [];
 
-    Promise.all([
+    var promises = [];
+    ['gold', 'silver', 'rose', 'black', 'red', 'cad', 'wax'].forEach(colorName => {
 
-        new Promise(resolve => { new THREE.TextureLoader().load('src/assets/images/gold.jpg', resolve) }).then(result => { ring.textures['gold'] = result }),
-        new Promise(resolve => { new THREE.TextureLoader().load('src/assets/images/rose.jpg', resolve) }).then(result => { ring.textures['rose'] = result }),
-        new Promise(resolve => { new THREE.TextureLoader().load('src/assets/images/silver.jpg', resolve) }).then(result => { ring.textures['silver'] = result }),
+        promises.push(
+            new Promise(resolve => { new THREE.TextureLoader().load(`src/assets/images/${colorName}.jpg`, resolve) }).then(result => { ring.textures[colorName] = result })
+        )
+    })
+
+
+    promises.push(
         new Promise(resolve => {
             new RGBELoader().setDataType(THREE.UnsignedByteType).load('src/assets/env/venice_sunset_1k.hdr', resolve)
         }).then(result => {
@@ -52,10 +60,13 @@ export function loadAssets(scene, renderer, callback) {
                     if (str.includes('core')) {
                         ring.core = child;
                     }
+                    if (str.includes('black')) {
+                        ring.black = child;
+                        ring.blackMat = child.material;
+                    }
                 }
             });
         }),
-
         loadModel('src/assets/chars.glb').then(result => {
             result.scene.traverse(child => {
                 if (child.isMesh) {
@@ -73,11 +84,13 @@ export function loadAssets(scene, renderer, callback) {
             result.scene.traverse(child => {
                 let str = child.name;
                 graphs[str] = child;
+                ring.graphMat = child.material
             });
-        }),
+        })
+    )
 
-
-    ]).then(() => {
+    Promise.all(promises).then(() => {
+        ring.black.material = new THREE.MeshStandardMaterial().copy(ring.blackMat)
         callback(ring, graphs, chars);
     })
 }

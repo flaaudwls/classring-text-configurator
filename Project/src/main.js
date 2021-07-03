@@ -43,8 +43,8 @@ function init() {
         graphs = _graphs;
         load_icon.style.display = 'none';
 
-        UIControls(ring, graphs, charPos, camera, controls);
-        changeText('MIAMI_HIGHSCHOOL', 'top');
+        UIControls(ring, graphs, charPos, scene, camera, controls);
+        changeText('LOYAL_HIGHSCHOOL', 'top');
         changeText('FAMILY', 'right');
         changeText('2021', 'left');
         changeText('NEW BEGINNINGS', 'inside');
@@ -149,7 +149,7 @@ export function changeText(text, side) {
                 m.position.set(a.position[0], a.position[1], a.position[2]);
                 rotate(m, a.rotation);
 
-                m.scale.set(-a.scale[0], a.scale[1], (top1TextDetector == 1) ? a.scale[2] : -a.scale[2]);
+                m.scale.set((top1TextDetector == 1) ? a.scale[0] : -a.scale[0], a.scale[1], (top1TextDetector == 1) ? a.scale[2] : -a.scale[2]);
                 m.visible = true;
                 m.material = ring.body[0].material;
                 charPos.top.push(m);
@@ -205,7 +205,7 @@ export function changeText(text, side) {
             break;
     }
 }
-
+window.camera = camera;
 /* Rotate Mesh By Euler From Blender */
 function rotate(mesh, e) { //euler
     var qx = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), e[0]);
@@ -216,3 +216,49 @@ function rotate(mesh, e) { //euler
     mesh.applyQuaternion(qz);
 }
 
+
+// CHANGE RING COLOR
+document.getElementById('ring_color').onchange = function () {
+
+    ring.color = this.value;
+    ring.body[0].material.map = ring.textures[ring.color];
+    charPos.right[0].material.map = ring.textures[ring.color];
+    charPos.left[0].material.map = ring.textures[ring.color];
+
+    graphs['soccer_ball'].material.map = ring.textures[ring.color];
+
+    ring.core.material.map = new THREE.TextureLoader().load(`src/assets/images/${parseInt($('#colorSelect').val()) + 1}.jpg`)
+
+    if (ring.color === 'wax') {
+        ring.black.material.map = ring.textures['wax'];
+        ring.core.material.map = ring.textures['wax']
+        charPos.inside.forEach(m => {
+            m.material.color = new THREE.Color(0x332266)
+        })
+
+        ring.body[0].material.roughness = 0.8
+        ring.black.material.roughness = 0.8;
+        graphs['soccer_ball'].material.roughness = 0.8
+        ring.core.visible = false;
+    } else {
+        ring.core.visible = true;
+        ring.body[0].material.roughness = 0.1
+        ring.black.material.roughness = 0.339;
+        graphs['soccer_ball'].material.roughness = 0.5
+
+        if (ring.color === 'cad') {
+            ring.black.material.map = ring.textures[ring.color];
+            ring.core.material.map = ring.textures['red']
+            charPos.inside.forEach(m => {
+                m.material.color = new THREE.Color(0x004422)
+            })
+        } else {
+            ring.black.material = new THREE.MeshStandardMaterial().copy(ring.blackMat)
+            charPos.inside.forEach(m => {
+                m.material.color = new THREE.Color(0x000000)
+            })
+        }
+    }
+
+
+}
